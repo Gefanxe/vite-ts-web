@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  buildAndDeployPage:
+    name: Build and deploy gh-pages
+    env:
+      MY_SECRET: ${{secrets.FOR_PAGE}}
+      USER_NAME: Gefanxe
+      USER_EMAIL: actfire@gmail.com
+      PUBLISH_DIR: ./dist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: yarn
+
+      - name: Install
+        run: yarn
+
+      - name: build
+        run: yarn build
+
+      - name: Deploy Page
+        run: |
+          cd $PUBLISH_DIR
+          git init
+          git config --local user.name $USER_NAME
+          git config --local user.email $USER_EMAIL
+          git status
+          git remote add origin https://$MY_SECRET@github.com/$GITHUB_REPOSITORY.git
+          git checkout -b gh-pages
+          git add .
+          git commit -m "deploy to Github pages"
+          git push origin gh-pages -f
+          echo 🤘 deploy gh-pages complete.
