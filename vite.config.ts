@@ -6,7 +6,7 @@ export default defineConfig(({ command, mode }) => {
   console.log('mode:', mode);
 
   return {
-    base: (mode === 'gitlabpage') ? '/vite-ts-web/' : '/',
+    base: (mode === 'page') ? '/vite-ts-web/' : '/',
     server: {
       host: 'localhost',
       port: 8080,
